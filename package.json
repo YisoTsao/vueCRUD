@@ -15,7 +15,8 @@
     "semantic-ui-vue": "^0.10.1",
     "vue": "^2.6.10",
     "vue-router": "^3.1.5",
-    "vuex": "^3.1.2"
+    "vuex": "^3.1.2",
+    "express": "*"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.1.0",
