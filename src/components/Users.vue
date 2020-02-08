@@ -58,23 +58,23 @@
           <sui-form equal-width>
             <sui-form-fields>
               <sui-form-field>
-                <input type="text" ref="lname" v-model="input.lname" id="lname" required />
+                <input type="text" ref="lname" v-model="input.lname" id="lname" required/>
                 <label>Last Name</label>
               </sui-form-field>
               <sui-form-field>
-                <input type="text" v-model="input.fname" id="fname" required />
+                <input type="text" v-model="input.fname" id="fname" required/>
                 <label>First name</label>
               </sui-form-field>
               <sui-form-field>
-                <input type="text" v-model="input.age" id="age" required />
+                <input type="text" v-model="input.age" id="age" required/>
                 <label>Age</label>
               </sui-form-field>
               <sui-form-field>
-                <input type="text" v-model="input.job" id="job" required />
+                <input type="text" v-model="input.job" id="job" required/>
                 <label>Job</label>
               </sui-form-field>
               <sui-form-field>
-                <input v-model="input.address" id="address" type="text" required />
+                <input v-model="input.address" id="address" type="text" required/>
                 <label>address</label>
               </sui-form-field>
             </sui-form-fields>
@@ -132,28 +132,28 @@
         <sui-form equal-width>
           <sui-form-fields>
             <sui-form-field>
+              <input id="last_name" type="text" v-model="editInput.lname" required/>
               <label>Last Name</label>
-              <input placeholder="John" id="last_name" type="text" v-model="editInput.lname" />
             </sui-form-field>
             <sui-form-field>
+              <input id="first_name" type="text" v-model="editInput.fname" required/>
               <label>First Name</label>
-              <input placeholder="Doe" id="first_name" type="text" v-model="editInput.fname" />
             </sui-form-field>
           </sui-form-fields>
           <sui-form-fields>
             <sui-form-field>
+              <input id="edit_age" type="text" v-model="editInput.age" required/>
               <label>Age</label>
-              <input placeholder="26" id="edit_age" type="text" v-model="editInput.age" />
             </sui-form-field>
             <sui-form-field>
+              <input id="edit_job" type="text" v-model="editInput.job" required/>
               <label>Job</label>
-              <input placeholder="Teacher" id="edit_job" type="text" v-model="editInput.job" />
             </sui-form-field>
           </sui-form-fields>
           <sui-form-fields>
             <sui-form-field>
+              <input id="edit_address" type="text" v-model="editInput.address" required/>
               <label>address</label>
-              <input placeholder="Address" id="edit_address" type="text" v-model="editInput.address" />
             </sui-form-field>
           </sui-form-fields>
         </sui-form>
