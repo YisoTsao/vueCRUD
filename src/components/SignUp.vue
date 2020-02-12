@@ -3,7 +3,7 @@
   <div class="column">
     <h2 class="ui image header">
       <div class="content">
-        Log-in to your account
+        Sign up a account
       </div>
     </h2>
     <form action="https://s.codepen.io/voltron2112/debug/PqrEPM?" method="get" class="ui large form">
@@ -20,15 +20,12 @@
             <input v-model="password" type="password" name="password" placeholder="Password">
           </div>
         </div>
-        <div class="ui fluid large teal submit button" @click="login" id="submitBTN">Login</div>
+        <div class="ui fluid large teal submit button" @click="signup" id="submitBTN">Sign</div>
       </div>
 
       <div class="ui error message"></div>
 
     </form>
-    <div class="ui message">
-      <a href="/signup">Register</a>
-    </div>
   </div>
 
 </div>
@@ -38,7 +35,7 @@
 import firebase from 'firebase';
 
 export default {
-  name: 'login',
+  name: 'signup',
   props: {
     msg: String
   },
@@ -49,8 +46,8 @@ export default {
     }
   },
   methods: {
-    login: function () {
-      firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(
+    signup: function () {
+      firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then(
         (user) => {
           this.$router.replace('home')
         },
