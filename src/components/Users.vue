@@ -1,7 +1,7 @@
 <template>
 <div class="ui container">
   <div class="user_title">User list</div>
-  <table class="ui compact celled definition table" v-show="persons.length">
+  <table class="ui compact celled definition table">
     <thead class="full-width">
       <tr>
         <th v-for="column in columns">
@@ -10,22 +10,22 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="(person,index) in persons">
+      <tr v-for="(input, index) in persons" v-bind:key="input['.key']">
         <td>{{index}}</td>
         <td>
-          {{person.lname}}
+          {{input.lname}}
         </td>
         <td>
-          {{person.fname}}
+          {{input.fname}}
         </td>
         <td>
-          {{person.age}} years
+          {{input.age}} years
         </td>
         <td>
-          {{person.job}}
+          {{input.job}}
         </td>
         <td>
-          {{person.address}}
+          {{input.address}}
         </td>
         <td>
           <button class="ui yellow button" @click="edit(index)">
@@ -40,7 +40,7 @@
               </i>
             </div>
           </button>
-          <button class="ui red button" @click="delete_list_user(index)">
+          <button class="ui red button" @click="delete_list_user(input['.key'])">
             <div class="icon_box">
               <i class="minus icon">
               </i>
@@ -58,23 +58,23 @@
           <sui-form equal-width>
             <sui-form-fields>
               <sui-form-field>
-                <input type="text" ref="lname" v-model="input.lname" id="lname" required/>
-                <label>Last Name</label>
+                <input type="text" ref="lname" v-model="input.lname" id="lname" required />
+                <label>Last Name1</label>
               </sui-form-field>
               <sui-form-field>
-                <input type="text" v-model="input.fname" id="fname" required/>
+                <input type="text" v-model="input.fname" id="fname" required />
                 <label>First name</label>
               </sui-form-field>
               <sui-form-field>
-                <input type="text" v-model="input.age" id="age" required/>
+                <input type="text" v-model="input.age" id="age" required />
                 <label>Age</label>
               </sui-form-field>
               <sui-form-field>
-                <input type="text" v-model="input.job" id="job" required/>
+                <input type="text" v-model="input.job" id="job" required />
                 <label>Job</label>
               </sui-form-field>
               <sui-form-field>
-                <input v-model="input.address" id="address" type="text" required/>
+                <input v-model="input.address" id="address" type="text" required />
                 <label>address</label>
               </sui-form-field>
             </sui-form-fields>
@@ -125,34 +125,34 @@
 
   <!-- <sui-button @click.native="toggle">new user</sui-button> -->
   <sui-modal v-model="open">
-    <sui-modal-header>New User</sui-modal-header>
+    <sui-modal-header>Edit User</sui-modal-header>
     <sui-modal-content scrolling image>
       <sui-modal-description>
         <sui-header>User Profile</sui-header>
         <sui-form equal-width>
           <sui-form-fields>
             <sui-form-field>
-              <input id="last_name" type="text" v-model="editInput.lname" required/>
+              <input id="last_name" type="text" v-model="editInput.lname" required />
               <label>Last Name</label>
             </sui-form-field>
             <sui-form-field>
-              <input id="first_name" type="text" v-model="editInput.fname" required/>
+              <input id="first_name" type="text" v-model="editInput.fname" required />
               <label>First Name</label>
             </sui-form-field>
           </sui-form-fields>
           <sui-form-fields>
             <sui-form-field>
-              <input id="edit_age" type="text" v-model="editInput.age" required/>
+              <input id="edit_age" type="text" v-model="editInput.age" required />
               <label>Age</label>
             </sui-form-field>
             <sui-form-field>
-              <input id="edit_job" type="text" v-model="editInput.job" required/>
+              <input id="edit_job" type="text" v-model="editInput.job" required />
               <label>Job</label>
             </sui-form-field>
           </sui-form-fields>
           <sui-form-fields>
             <sui-form-field>
-              <input id="edit_address" type="text" v-model="editInput.address" required/>
+              <input id="edit_address" type="text" v-model="editInput.address" required />
               <label>address</label>
             </sui-form-field>
           </sui-form-fields>
@@ -168,53 +168,13 @@
 </template>
 
 <script>
+import usersRef from '../Firebase'
+
 export default {
   data() {
     return {
       columns: ['Index', 'Last Name', 'First Name', 'Age', 'Job', 'Address', 'Actions'],
-      persons: [{
-        lname: "ADIASSA",
-        fname: "Ethiel",
-        age: 20,
-        job: "Web Developer",
-        address: "Lome-Togo"
-      }, {
-        lname: "ADUFU",
-        fname: "Patrick",
-        age: 20,
-        job: "Banker",
-        address: "Senegal-Dakar"
-      }, {
-        lname: "MOUTON",
-        fname: "John",
-        age: 28,
-        job: "Scientist",
-        address: "New-York/USA"
-      }, {
-        lname: "SMITH",
-        fname: "Luther",
-        age: 18,
-        job: "Pilot",
-        address: "London/GB"
-      }, {
-        lname: "WALTER",
-        fname: "Ramses Peter",
-        age: 38,
-        job: "Doctor",
-        address: "Paris/France"
-      }, {
-        lname: "GEORGES",
-        fname: "Luther",
-        age: 45,
-        job: "Musician",
-        address: "Vienne"
-      }, {
-        lname: "MICHAEL",
-        fname: "Daven",
-        age: 27,
-        job: "Boxer",
-        address: "Pekin/China"
-      }],
+      persons: [],
       bin: [],
       input: {
         lname: "",
@@ -233,12 +193,36 @@ export default {
       open: false,
     }
   },
+  // mounted() {
+  //   usersRef.once('value', (persons) => {
+  //     persons.forEach((person) => {
+  //       this.persons.push({
+  //         // ref: person.user_ref,
+  //         lname: person.child('lname').val(),
+  //         fname: person.child('fname').val(),
+  //         age: person.child('age').val(),
+  //         job: person.child('job').val(),
+  //         address: person.child('address').val()
+  //       })
+  //     })
+  //   })
+  // },
+  // firebase: {
+  //   persons: [firebase.database().ref('users')]
+  // },
   methods: {
     toggle() {
       this.open = !this.open;
     },
     //function to add data to table
     add: function () {
+      usersRef.push(this.input)
+      this.input.lname,
+        this.input.fname,
+        this.input.age,
+        this.input.job,
+        this.input.address
+
       this.persons.push({
         lname: this.input.lname,
         fname: this.input.fname,
@@ -250,8 +234,8 @@ export default {
       for (var key in this.input) {
         this.input[key] = '';
       }
-      // this.persons.sort(ordonner);
-      this.$refs.lname.focus();
+      // this.persons.sort(ordonner);
+      // this.$refs.lname.focus();
     },
     //function to handle data edition
     edit: function (index) {
@@ -275,6 +259,15 @@ export default {
     //function to update data
     update: function () {
       // this.persons.push(this.editInput);
+
+
+      usersRef.update(this.editInput)
+      this.editInput.lname,
+        this.editInput.fname,
+        this.editInput.age,
+        this.editInput.job,
+        this.editInput.address
+
       this.persons.push({
         lname: this.editInput.lname,
         fname: this.editInput.fname,
@@ -292,11 +285,17 @@ export default {
       // console.log(this.bin[index]);
       this.bin.splice(index, 1);
     },
-    delete_list_user: function (index) {
-      this.persons.splice(index, 1);
+    delete_list_user(key) {
+       usersRef.child(key).remove();
+      this.persons.splice(key, 1);
     }
-  }
+  },
+  created() {
+    usersRef.on('value', (snapshot) => {
 
+      this.persons = snapshot.val();
+    });
+  }
 }
 </script>
 

@@ -4,7 +4,6 @@ import store from './store/index'
 import router from './store/router'
 import 'semantic-ui-css/semantic.min.css';
 import SuiVue from 'semantic-ui-vue';
-import firebase from './Firebase';
 
 Vue.use(SuiVue);
 
