@@ -10,8 +10,8 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="(input, index) in persons" v-bind:key="input['.key']">
-        <td>{{index}}</td>
+      <tr v-for="(input, key) in persons" :key="key">
+        <td>{{key}}</td>
         <td>
           {{input.lname}}
         </td>
@@ -28,19 +28,18 @@
           {{input.address}}
         </td>
         <td>
-          <button class="ui yellow button" @click="edit(index)">
+          <button class="ui yellow button" @click="edit(key)">
             <div class="icon_box">
               <i class="edit icon"></i>
             </div>
-
           </button>
-          <button class="ui orange button" @click="archive(index)">
+          <!-- <button class="ui orange button">
             <div class="icon_box">
               <i class="archive icon">
               </i>
             </div>
-          </button>
-          <button class="ui red button" @click="delete_list_user(input['.key'])">
+          </button> -->
+          <button class="ui red button" @click="delete_list_user(key)">
             <div class="icon_box">
               <i class="minus icon">
               </i>
@@ -97,8 +96,8 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="(person,index) in bin">
-        <td>{{index}}</td>
+      <tr v-for="(person,key) in bin">
+        <td>{{key}}</td>
         <td>
           {{person.lname}}
         </td>
@@ -115,15 +114,13 @@
           {{person.address}}
         </td>
         <td>
-          <button class="ui yellow button" @click="restore(index)"><i class="undo icon"></i></button>
-          <button class="ui red button" @click="delete_archive_user(index)"><i class="minus icon"></i></button>
+          <button class="ui yellow button" @click="restore(key)"><i class="undo icon"></i></button>
+          <button class="ui red button" @click="delete_archive_user(key)"><i class="minus icon"></i></button>
         </td>
       </tr>
-
     </tbody>
   </table>
 
-  <!-- <sui-button @click.native="toggle">new user</sui-button> -->
   <sui-modal v-model="open">
     <sui-modal-header>Edit User</sui-modal-header>
     <sui-modal-content scrolling image>
@@ -160,7 +157,7 @@
       </sui-modal-description>
     </sui-modal-content>
     <sui-modal-actions>
-      <sui-button @click="update" positive @click.native="toggle">OK</sui-button>
+      <sui-button @click="updateUser()" positive @click.native="toggle">OK</sui-button>
     </sui-modal-actions>
   </sui-modal>
 
@@ -168,14 +165,15 @@
 </template>
 
 <script>
-import usersRef from '../Firebase'
+import firebase_root from '../Firebase'
 
 export default {
   data() {
     return {
-      columns: ['Index', 'Last Name', 'First Name', 'Age', 'Job', 'Address', 'Actions'],
+      columns: ['ID', 'Last Name', 'First Name', 'Age', 'Job', 'Address', 'Actions'],
       persons: [],
       bin: [],
+      current_id: "",
       input: {
         lname: "",
         fname: "",
@@ -193,105 +191,56 @@ export default {
       open: false,
     }
   },
-  // mounted() {
-  //   usersRef.once('value', (persons) => {
-  //     persons.forEach((person) => {
-  //       this.persons.push({
-  //         // ref: person.user_ref,
-  //         lname: person.child('lname').val(),
-  //         fname: person.child('fname').val(),
-  //         age: person.child('age').val(),
-  //         job: person.child('job').val(),
-  //         address: person.child('address').val()
-  //       })
-  //     })
-  //   })
-  // },
-  // firebase: {
-  //   persons: [firebase.database().ref('users')]
-  // },
   methods: {
     toggle() {
       this.open = !this.open;
     },
-    //function to add data to table
-    add: function () {
-      usersRef.push(this.input)
-      this.input.lname,
-        this.input.fname,
-        this.input.age,
-        this.input.job,
-        this.input.address
-
-      this.persons.push({
-        lname: this.input.lname,
-        fname: this.input.fname,
-        age: this.input.age,
-        job: this.input.job,
-        address: this.input.address
-      });
+    add() {
+      firebase_root.ref('users').push({
+          lname: this.input.lname,
+          fname: this.input.fname,
+          age: this.input.age,
+          job: this.input.job,
+          address: this.input.address
+        })
+        .then((data) => {
+          console.log(data)
+        })
+        .catch((error) => {
+          console.log(error)
+        });
 
       for (var key in this.input) {
         this.input[key] = '';
       }
-      // this.persons.sort(ordonner);
-      // this.$refs.lname.focus();
     },
-    //function to handle data edition
-    edit: function (index) {
+    edit(key) {
       this.open = !this.open;
-      this.editInput = this.persons[index];
-      console.log(this.editInput);
-      this.persons.splice(index, 1);
+      this.editInput = this.persons[key];
+      this.current_id = key;
+      console.log(key);
     },
-    //function to send data to bin
-    archive: function (index) {
-      this.bin.push(this.persons[index]);
-      this.persons.splice(index, 1);
-      // this.bin.sort(ordonner);
-    },
-    //function to restore data
-    restore: function (index) {
-      this.persons.push(this.bin[index]);
-      this.bin.splice(index, 1);
-      // this.bin.sort(ordonner);
-    },
-    //function to update data
-    update: function () {
-      // this.persons.push(this.editInput);
-
-
-      usersRef.update(this.editInput)
-      this.editInput.lname,
-        this.editInput.fname,
-        this.editInput.age,
-        this.editInput.job,
-        this.editInput.address
-
-      this.persons.push({
-        lname: this.editInput.lname,
-        fname: this.editInput.fname,
-        age: this.editInput.age,
-        job: this.editInput.job,
-        address: this.editInput.address
-      });
-      for (var key in this.editInput) {
-        this.editInput[key] = '';
-      }
-      // this.persons.sort(ordonner);
-    },
-    // //function to defintely delete data 
-    delete_archive_user: function (index) {
-      // console.log(this.bin[index]);
-      this.bin.splice(index, 1);
+    updateUser() {
+      firebase_root.ref('users/' + this.current_id).set(this.editInput)
     },
     delete_list_user(key) {
-       usersRef.child(key).remove();
-      this.persons.splice(key, 1);
-    }
+      firebase_root.ref('users/' + key).remove();
+    },
+    // archive: function (index) {
+    //   this.bin.push(this.persons[index]);
+    //   this.persons.splice(index, 1);
+    // },
+    // restore: function (index) {
+    //   this.persons.push(this.bin[index]);
+    //   this.bin.splice(index, 1);
+    // },
+    // delete_archive_user: function (index) {
+    //   // console.log(this.bin[index]);
+    //   this.bin.splice(index, 1);
+    // },
   },
   created() {
-    usersRef.on('value', (snapshot) => {
+    firebase_root.ref('users').on('value', (snapshot) => {
 
       this.persons = snapshot.val();
     });

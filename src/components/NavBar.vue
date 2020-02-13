@@ -7,13 +7,13 @@
     <a class="item" href="/users">
       Users
     </a>
-    <div class="right menu">
+    <!-- <div class="right menu">
       <div class="item">
         <router-link to="/login">
           <div class="ui primary button">Login in</div>
         </router-link>
       </div>
-    </div>
+    </div> -->
   </div>
 </div>
 </template>
