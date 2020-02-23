@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div class="ui tiny menu">
+  <div class="ui large menu">
     <a class="item" href="/">
       Home
     </a>

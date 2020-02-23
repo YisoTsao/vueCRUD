@@ -1,4 +1,13 @@
-# vue01
+# vueCRUD
+
+## Firebase.js setup
+```
+apiKey: "yourKey",
+databaseURL: "https://yourName.firebaseio.com",
+projectId: "yourName"
+```
+## Firebase realtime Database
+- create users collection
 
 ## Project setup
 ```
