@@ -1,5 +1,6 @@
 # vueCRUD
 
+![image](https://github.com/YisoTsao/vueCRUD/blob/master/vueCRUD.gif?raw=true)
 ## Firebase.js setup
 ```
 apiKey: "yourKey",
